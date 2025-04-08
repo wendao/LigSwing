@@ -1,0 +1,14 @@
+6AAC 9TR c1cc(cc(c1)N=[N+]=[N-])COC(=O)NCCCC[C@@H](C(=O)O)N
+6AAD 9TU c1cc(cc(c1)C2(N=N2)C(F)(F)F)COC(=O)NCCCC[C@@H](C(=O)O)N
+6AAN 9TX C#Cc1cccc(c1)COC(=O)NCCCC[C@@H](C(=O)O)N
+6AAO 9U0 C1CCC=CC(CC1)OC(=O)NCCCC[C@@H](C(=O)O)N
+6AAP 9U6 c1ccc(cc1)COC(=O)NCC[Se]C[C@@H](C(=O)O)N
+6AAQ 9U9 C1C[C@@H]2[C@@H](C2COC(=O)NCCCC[C@@H](C(=O)O)N)CCC#C1
+6AAZ 9UC c1cc(ccc1COC(=O)NCCCC[C@@H](C(=O)O)N)[N+](=O)[O-]
+6AB0 9UF c1cc(ncc1COC(=O)NCCCC[C@@H](C(=O)O)N)N
+6AB1 9V0 c1ccc(c(c1)COC(=O)NCCCC[C@@H](C(=O)O)N)N=[N+]=[N-]
+6AB2 9V6 c1ccc(c(c1)COC(=O)NCCCC[C@@H](C(=O)O)N)Cl
+6AB8 9VC c1ccc(cc1)COC(=O)NCCCC[C@@H](C(=O)O)N
+6ABK 9VF C[Si](C)(C)COC(=O)NCCCC[C@@H](C(=O)O)N
+6ABL 9VL c1ccc(c(c1)COC(=O)NCCCC[C@@H](C(=O)O)N)Br
+6ABM 9VR c1cc(ccc1COC(=O)NCCCC[C@@H](C(=O)O)N)C2(N=N2)C(F)(F)F
