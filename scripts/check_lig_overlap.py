@@ -1,54 +1,55 @@
-import sys, os, csv
+import sys, os
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
 import rdkit.Chem.rdFMCS as MCS
 
-#import py3Dmol
-#from ipywidgets import interact, interactive, fixed
+out_dir = "overlap_images"
+if not os.path.isdir(out_dir):
+    os.mkdir(out_dir)
 
-#python check.py ref.sdf SMILES.txt 
-
-#load lig template
+# load lig template
 suppl = Chem.SDMolSupplier(sys.argv[1])
+LIG_tmpl = None
 for mol in suppl:
     LIG_tmpl = mol
-    print("Template", Chem.MolToSmiles(LIG_tmpl))
+    break
+print("Template:", Chem.MolToSmiles(LIG_tmpl))
 
-#load UAA smile strings
+# load SMILES strings
 smi_db = {}
-lines = open(sys.argv[2], 'r').readlines()
-for l in lines[:]:
-    es = l.split(' ')
-    ndx = es[0]
-    smi = es[1].strip()
-    #print ndx, smi
-    smi_db[ndx] = smi
-smi_db
+for l in open(sys.argv[2], 'r').readlines():
+    es = l.split()
+    if len(es) < 2:
+        continue
+    smi_db[es[0]] = es[1].strip()
 
-import numpy
-def GenOverlap(mol, tmpl):
-    #constrained and align
-    #res = MCS.FindMCS([mol, tmpl], threshold=1.0, completeRingsOnly=True)
+
+def draw_overlap(mol, tmpl, ndx):
     res = MCS.FindMCS([mol, tmpl])
     p = Chem.MolFromSmarts(res.smartsString)
-    core = AllChem.DeleteSubstructs(AllChem.ReplaceSidechains(tmpl,p), Chem.MolFromSmiles('*'))
+    core = AllChem.DeleteSubstructs(AllChem.ReplaceSidechains(tmpl, p), Chem.MolFromSmiles('*'))
     core.UpdatePropertyCache()
-    print("overlap:", Chem.MolToSmiles(core))
+    print(ndx, "overlap:", Chem.MolToSmiles(core))
 
-for ndx in smi_db.keys():
-    k = ndx
-    smi = smi_db[k]
-    #init
-    #d = "U"+str(k)
-    #if not os.path.isdir(d):
-    #    os.mkdir(d)
-    #create
-    print(k, smi)
-    lig = AllChem.MolFromSmiles(smi) #Chem.MolToSmiles(mol, isomericSmiles=True)
-    #fix prod
+    # find matching atoms in mol
+    match = mol.GetSubstructMatch(p)
+    if not match:
+        print(ndx, "no match found in mol, falling back to SMARTS match")
+        match = mol.GetSubstructMatch(Chem.MolFromSmarts(res.smartsString))
+    if match:
+        img = Draw.MolToImage(mol, highlightAtoms=list(match), size=(400, 300))
+        img.save(os.path.join(out_dir, f"{ndx}_overlap.png"))
+        print(ndx, f"saved to {out_dir}/{ndx}_overlap.png")
+    else:
+        print(ndx, "no match found, skipping image")
+
+
+for ndx in smi_db:
+    smi = smi_db[ndx]
+    print(ndx, smi)
+    lig = Chem.MolFromSmiles(smi)
     Chem.SanitizeMol(lig)
-    product = Chem.AddHs(lig)
-    #use templete
-    GenOverlap(product, LIG_tmpl)
+    mol_h = Chem.AddHs(lig)
+    draw_overlap(mol_h, LIG_tmpl, ndx)
 
